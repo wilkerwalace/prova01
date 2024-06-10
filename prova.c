@@ -21,15 +21,21 @@ typedef struct
 {
     char nome[100];
     char tipo[100];
+    int id;
     int livros_emprestados[MAX_BOOKS];
     int num_livros_emprestados;
-    int id;
 } Usuario;
 
 Livro biblioteca[MAX_BOOKS];
 Usuario usuarios[MAX_USERS];
 int numLivros = 0;
 int numUsuarios = 0;
+
+int compararTitulo(const void *a, const void *b) {
+    Livro *livroA = (Livro *)a;
+    Livro *livroB = (Livro *)b;
+    return strcmp(livroA->titulo, livroB->titulo);
+}
 
 void adicionarLivro()
 {
@@ -85,6 +91,8 @@ void exibirLivros()
         printf("A biblioteca está vazia.\n");
         return;
     }
+
+    qsort(biblioteca, numLivros, sizeof(Livro), compararTitulo);
 
     printf("Livros cadastrados:\n");
     for (int i = 0; i < numLivros; i++)
@@ -413,6 +421,12 @@ void adicionarUsuario()
     printf("Usuário adicionado com sucesso!\n");
 }
 
+int compararNome(const void *a, const void *b) {
+    Usuario *userA = (Usuario *)a;
+    Usuario *userB = (Usuario *)b;
+    return strcmp(userA->nome, userB->nome);
+}
+
 void exibirUsuarios()
 {
     if (numUsuarios == 0)
@@ -420,6 +434,8 @@ void exibirUsuarios()
         printf("Não há usuários cadastrados.\n");
         return;
     }
+
+    qsort(usuarios, numUsuarios, sizeof(Usuario), compararNome);
 
     printf("Usuários cadastrados:\n");
     for (int i = 0; i < numUsuarios; i++)
