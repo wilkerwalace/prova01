@@ -6,6 +6,7 @@
 #define MAX_BOOKS 100
 #define MAX_USERS 100
 
+// Definição de estruturas
 typedef struct
 {
     char titulo[100];
@@ -14,7 +15,7 @@ typedef struct
     int ano;
     int disponivel;
     int indice;
-    time_t data_emprestimo; // Adicionado campo para rastrear a data de empréstimo
+    time_t data_emprestimo;
 } Livro;
 
 typedef struct
@@ -26,10 +27,197 @@ typedef struct
     int num_livros_emprestados;
 } Usuario;
 
+// Variáveis globais
 Livro biblioteca[MAX_BOOKS];
 Usuario usuarios[MAX_USERS];
 int numLivros = 0;
 int numUsuarios = 0;
+
+// Funções
+int compararTitulo(const void *a, const void *b);
+void usuarioValido(int indiceUsuario);
+void verificadorUsuario();
+void adicionarLivros();
+void exibirLivros();
+void atualizarLivro();
+void deletarLivro();
+void emprestarLivro();
+void devolverLivro();
+void calcularMulta();
+void menuLivros();
+void adicionarUsuario();
+int compararNome(const void *a, const void *b);
+void exibirUsuarios();
+void atualizarUsuario();
+void deletarUsuario();
+void menuUsuario();
+
+int main(){
+    int escolha;
+    do
+    {
+        printf("______________________________________________________________\n");
+        printf("|#     #           #####                         #    #  #### | \n");
+        printf("|#     # #    # # #     #   ##   #####  # ###### ##   # #     | \n");
+        printf("|#     # ##   # # #        #  #  #    # # #      # #  #  #### | \n");
+        printf("|#     # # #  # #  #####  #    # #    # # #####  #  # #      #| \n");
+        printf("|#     # #  # # #       # ###### #####  # #      #   ## #    #| \n");
+        printf("|#     # #   ## # #     # #    # #      # #      #   ## #    #| \n");
+        printf("| #####  #    # #  #####  #    # #      # ###### #    #  #### | \n");
+        printf("|_____________________________________________________________|\n");
+        printf("           __________________________________________\n");
+        printf("           |Sistema de Gerenciamento de Biblioteca   |\n");
+        printf("           |_________________________________________|\n");
+        printf("           |1. Menu de Livros                        |\n");
+        printf("           |2. Menu de Usuários                      |\n");
+        printf("           |0. Sair                                  |\n");
+        printf("           |_________________________________________|\n");
+        printf("Escolha uma opção: \n");
+        scanf("%d", &escolha);
+
+        getchar(); // Limpa o buffer do teclado
+
+        switch (escolha)
+        {
+        case 1:
+            menuLivros();
+            break;
+        case 2:
+            menuUsuario();
+            break;
+        case 0:
+            printf("Saindo do sistema...\n");
+            break;
+        default:
+            printf("Opção inválida. Tente novamente.\n");
+            break;
+        }
+
+        printf("\n");
+    } while (escolha != 0);
+    return 0;
+}
+
+void menuLivros()
+{
+    int escolha;
+    do
+    {
+        printf("______________________________________________________________\n");
+        printf("|#     #           #####                         #    #  #### | \n");
+        printf("|#     # #    # # #     #   ##   #####  # ###### ##   # #     | \n");
+        printf("|#     # ##   # # #        #  #  #    # # #      # #  #  #### | \n");
+        printf("|#     # # #  # #  #####  #    # #    # # #####  #  # #      #| \n");
+        printf("|#     # #  # # #       # ###### #####  # #      #   ## #    #| \n");
+        printf("|#     # #   ## # #     # #    # #      # #      #   ## #    #| \n");
+        printf("| #####  #    # #  #####  #    # #      # ###### #    #  #### | \n");
+        printf("|_____________________________________________________________|\n");
+        printf("           __________________________________________\n");
+        printf("           |             Menu de Usuário             |\n");
+        printf("           |_________________________________________|\n");
+        printf("           |1. Adicionar livro                       |\n");
+        printf("           |2. Visualizar livros                     |\n");
+        printf("           |3. Atualizar livro                       |\n");
+        printf("           |4. Deletar livro                         |\n");
+        printf("           |5. Emprestar livro                       |\n");
+        printf("           |6. Devolver livro                        |\n");
+        printf("           |7. Calcular multa                        |\n");
+        printf("           |0. Voltar                                |\n");
+        printf("           |_________________________________________|\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &escolha);
+
+        getchar(); // Limpa o buffer do teclado
+
+        switch (escolha)
+        {
+            case 1:
+                adicionarLivros();
+                break;
+            case 2:
+                exibirLivros();
+                break;
+            case 3:
+                atualizarLivro();
+                break;
+            case 4:
+                deletarLivro();
+                break;
+            case 5:
+                emprestarLivro();
+                break;
+            case 6:
+                devolverLivro();
+                break;
+            case 7:
+                calcularMulta();
+                break;
+            case 0:
+                printf("Voltando ao menu principal...\n");
+                break;
+            default:
+                printf("Opção inválida. Tente novamente.\n");
+                break;
+        }
+
+        printf("\n");
+    } while (escolha != 0);
+}
+
+void menuUsuario()
+{
+    int escolha;
+
+    do
+    {
+        printf("______________________________________________________________\n");
+        printf("|#     #           #####                         #    #  #### | \n");
+        printf("|#     # #    # # #     #   ##   #####  # ###### ##   # #     | \n");
+        printf("|#     # ##   # # #        #  #  #    # # #      # #  #  #### | \n");
+        printf("|#     # # #  # #  #####  #    # #    # # #####  #  # #      #| \n");
+        printf("|#     # #  # # #       # ###### #####  # #      #   ## #    #| \n");
+        printf("|#     # #   ## # #     # #    # #      # #      #   ## #    #| \n");
+        printf("| #####  #    # #  #####  #    # #      # ###### #    #  #### | \n");
+        printf("|_____________________________________________________________|\n");
+        printf("           ________________________________________\n");
+        printf("          |             Menu de Usuário            |\n");
+        printf("          |________________________________________|\n");
+        printf("          |1. Criar usuário                        |\n");
+        printf("          |2. Ver usuários                         |\n");
+        printf("          |3. Atualizar usuário                    |\n");
+        printf("          |4. Deletar usuário                      |\n");
+        printf("          |0. Voltar                               |\n");
+        printf("          |________________________________________|\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &escolha);
+
+        getchar(); // Limpa o buffer do teclado
+
+        switch (escolha)
+        {
+            case 1:
+                adicionarUsuario();
+                break;
+            case 2:
+                exibirUsuarios();
+                break;
+            case 3:
+                atualizarUsuario();
+                break;
+            case 4:
+                deletarUsuario();
+                break;
+            case 0:
+                printf("Voltando ao menu principal...\n");
+                break;
+            default:
+                printf("Opção inválida. Tente novamente.\n");
+                break;
+        }
+
+        printf("\n");
+    } while (escolha != 0);
+}
 
 int compararTitulo(const void *a, const void *b) {
     Livro *livroA = (Livro *)a;
@@ -37,11 +225,10 @@ int compararTitulo(const void *a, const void *b) {
     return strcmp(livroA->titulo, livroB->titulo);
 }
 
-void adicionarLivro()
-{
+void adicionarLivros(){
     if (numLivros >= MAX_BOOKS)
     {
-        printf("A biblioteca está cheia. Não é possível adicionar mais livros.\n");
+        printf("O número máximo de livros foi atingido. Não é possível adicionar mais livros.\n");
         return;
     }
 
@@ -58,30 +245,16 @@ void adicionarLivro()
     fgets(novoLivro.genero, sizeof(novoLivro.genero), stdin);
     novoLivro.genero[strcspn(novoLivro.genero, "\n")] = '\0';
 
-    int anoValido = 0;
-    do
-    {
-        printf("Digite o ano de publicação do livro: ");
-        if (scanf("%d", &novoLivro.ano) != 1)
-        {
-            printf("Ano inválido. Por favor, insira um número inteiro.\n");
-            getchar(); // Limpa o buffer do teclado
-        }
-        else
-        {
-            anoValido = 1;
-        }
-    } while (!anoValido);
+    printf("Digite o ano de publicação do livro: ");
+    scanf("%d", &novoLivro.ano);
 
-    printf("Digite a disponibilidade do livro (1 para disponível, 0 para indisponível): ");
-    scanf("%d", &novoLivro.disponivel);
-
-    getchar(); // Limpa o buffer do teclado
-
+    novoLivro.disponivel = 1;
     novoLivro.indice = numLivros + 1;
+
     biblioteca[numLivros++] = novoLivro;
 
     printf("Livro adicionado com sucesso!\n");
+
 }
 
 void exibirLivros()
@@ -142,11 +315,8 @@ void atualizarLivro()
     printf("Digite o novo ano de publicação do livro: ");
     scanf("%d", &livro->ano);
 
-    printf("Digite a nova disponibilidade do livro (1 para disponível, 0 para indisponível): ");
-    scanf("%d", &livro->disponivel);
-
     printf("Livro atualizado com sucesso!\n");
-}
+};
 
 void deletarLivro()
 {
@@ -184,11 +354,7 @@ void emprestarLivro()
         return;
     }
 
-    if (numUsuarios == 0)
-    {
-        printf("Não há usuários cadastrados.\n");
-        return;
-    }
+    void verificadorUsuario();
 
     int indiceLivro;
     printf("Digite o número do livro que deseja emprestar: ");
@@ -204,11 +370,7 @@ void emprestarLivro()
     printf("Digite o número do usuário que deseja emprestar o livro: ");
     scanf("%d", &indiceUsuario);
 
-    if (indiceUsuario < 1 || indiceUsuario > numUsuarios)
-    {
-        printf("Número de usuário inválido.\n");
-        return;
-    }
+    void usuarioValido(int indiceUsuario);
 
     Livro *livro = &biblioteca[indiceLivro - 1];
     Usuario *usuario = &usuarios[indiceUsuario - 1];
@@ -240,21 +402,13 @@ void devolverLivro()
         return;
     }
 
-    if (numUsuarios == 0)
-    {
-        printf("Não há usuários cadastrados.\n");
-        return;
-    }
+    void verificadorUsuario();
 
     int indiceUsuario;
     printf("Digite o número do usuário que deseja devolver o livro: ");
     scanf("%d", &indiceUsuario);
 
-    if (indiceUsuario < 1 || indiceUsuario > numUsuarios)
-    {
-        printf("Número de usuário inválido.\n");
-        return;
-    }
+    void usuarioValido(int indiceUsuario);
 
     Usuario *usuario = &usuarios[indiceUsuario - 1];
 
@@ -290,21 +444,13 @@ void devolverLivro()
 
 void calcularMulta()
 {
-    if (numUsuarios == 0)
-    {
-        printf("Não há usuários cadastrados.\n");
-        return;
-    }
+    void verificadorUsuario();
 
     int indiceUsuario;
     printf("Digite o número do usuário para calcular a multa: ");
     scanf("%d", &indiceUsuario);
 
-    if (indiceUsuario < 1 || indiceUsuario > numUsuarios)
-    {
-        printf("Número de usuário inválido.\n");
-        return;
-    }
+    void usuarioValido(int indiceUsuario);
 
     Usuario *usuario = &usuarios[indiceUsuario - 1];
 
@@ -330,71 +476,7 @@ void calcularMulta()
     printf("O usuário deve pagar uma multa de R$%.2f.\n", multaTotal);
 }
 
-void menuLivros()
-{
-    int escolha;
-    do
-    {
-        printf("______________________________________________________________\n");
-        printf("|#     #           #####                         #    #  #### | \n");
-        printf("|#     # #    # # #     #   ##   #####  # ###### ##   # #     | \n");
-        printf("|#     # ##   # # #        #  #  #    # # #      # #  #  #### | \n");
-        printf("|#     # # #  # #  #####  #    # #    # # #####  #  # #      #| \n");
-        printf("|#     # #  # # #       # ###### #####  # #      #   ## #    #| \n");
-        printf("|#     # #   ## # #     # #    # #      # #      #   ## #    #| \n");
-        printf("| #####  #    # #  #####  #    # #      # ###### #    #  #### | \n");
-        printf("|_____________________________________________________________|\n");
-        printf("           __________________________________________\n");
-        printf("           |             Menu de Usuário             |\n");
-        printf("           |_________________________________________|\n");
-        printf("           |1. Adicionar livro                       |\n");
-        printf("           |2. Visualizar livros                     |\n");
-        printf("           |3. Atualizar livro                       |\n");
-        printf("           |4. Deletar livro                         |\n");
-        printf("           |5. Emprestar livro                       |\n");
-        printf("           |6. Devolver livro                        |\n");
-        printf("           |7. Calcular multa                        |\n");
-        printf("           |0. Voltar                                |\n");
-        printf("           |_________________________________________|\n");
-        printf("Escolha uma opção: ");
-        scanf("%d", &escolha);
 
-        getchar(); // Limpa o buffer do teclado
-
-        switch (escolha)
-        {
-        case 1:
-            adicionarLivro();
-            break;
-        case 2:
-            exibirLivros();
-            break;
-        case 3:
-            atualizarLivro();
-            break;
-        case 4:
-            deletarLivro();
-            break;
-        case 5:
-            emprestarLivro();
-            break;
-        case 6:
-            devolverLivro();
-            break;
-        case 7:
-            calcularMulta();
-            break;
-        case 0:
-            printf("Voltando ao menu principal...\n");
-            break;
-        default:
-            printf("Opção inválida. Tente novamente.\n");
-            break;
-        }
-
-        printf("\n");
-    } while (escolha != 0);
-}
 
 void adicionarUsuario()
 {
@@ -429,11 +511,7 @@ int compararNome(const void *a, const void *b) {
 
 void exibirUsuarios()
 {
-    if (numUsuarios == 0)
-    {
-        printf("Não há usuários cadastrados.\n");
-        return;
-    }
+    void verificadorUsuario();
 
     qsort(usuarios, numUsuarios, sizeof(Usuario), compararNome);
 
@@ -449,21 +527,13 @@ void exibirUsuarios()
 
 void atualizarUsuario()
 {
-    if (numUsuarios == 0)
-    {
-        printf("Não há usuários cadastrados.\n");
-        return;
-    }
+    void verificadorUsuario();
 
     int indiceUsuario;
     printf("Digite o número do usuário que deseja atualizar: ");
     scanf("%d", &indiceUsuario);
 
-    if (indiceUsuario < 1 || indiceUsuario > numUsuarios)
-    {
-        printf("Número de usuário inválido.\n");
-        return;
-    }
+    void usuarioValido(int indiceUsuario);
 
     Usuario *usuario = &usuarios[indiceUsuario - 1];
 
@@ -481,21 +551,13 @@ void atualizarUsuario()
 
 void deletarUsuario()
 {
-    if (numUsuarios == 0)
-    {
-        printf("Não há usuários cadastrados.\n");
-        return;
-    }
+    void verificadorUsuario();
 
     int indiceUsuario;
     printf("Digite o número do usuário que deseja deletar: ");
     scanf("%d", &indiceUsuario);
 
-    if (indiceUsuario < 1 || indiceUsuario > numUsuarios)
-    {
-        printf("Número de usuário inválido.\n");
-        return;
-    }
+    void usuarioValido(int indiceUsuario);
 
     for (int i = indiceUsuario - 1; i < numUsuarios - 1; i++)
     {
@@ -507,105 +569,20 @@ void deletarUsuario()
     printf("Usuário deletado com sucesso!\n");
 }
 
-void menuUsuario()
+void usuarioValido(int indiceUsuario)
 {
-    int escolha;
-
-    do
+    if (indiceUsuario < 1 || indiceUsuario > numUsuarios)
     {
-        printf("______________________________________________________________\n");
-        printf("|#     #           #####                         #    #  #### | \n");
-        printf("|#     # #    # # #     #   ##   #####  # ###### ##   # #     | \n");
-        printf("|#     # ##   # # #        #  #  #    # # #      # #  #  #### | \n");
-        printf("|#     # # #  # #  #####  #    # #    # # #####  #  # #      #| \n");
-        printf("|#     # #  # # #       # ###### #####  # #      #   ## #    #| \n");
-        printf("|#     # #   ## # #     # #    # #      # #      #   ## #    #| \n");
-        printf("| #####  #    # #  #####  #    # #      # ###### #    #  #### | \n");
-        printf("|_____________________________________________________________|\n");
-        printf("           ________________________________________\n");
-        printf("          |             Menu de Usuário            |\n");
-        printf("          |________________________________________|\n");
-        printf("          |1. Criar usuário                        |\n");
-        printf("          |2. Ver usuários                         |\n");
-        printf("          |3. Atualizar usuário                    |\n");
-        printf("          |4. Deletar usuário                      |\n");
-        printf("          |0. Voltar                               |\n");
-        printf("          |________________________________________|\n");
-        printf("Escolha uma opção: ");
-        scanf("%d", &escolha);
-
-        getchar(); // Limpa o buffer do teclado
-
-        switch (escolha)
-        {
-        case 1:
-            adicionarUsuario();
-            break;
-        case 2:
-            exibirUsuarios();
-            break;
-        case 3:
-            atualizarUsuario();
-            break;
-        case 4:
-            deletarUsuario();
-            break;
-        case 0:
-            printf("Voltando ao menu principal...\n");
-            break;
-        default:
-            printf("Opção inválida. Tente novamente.\n");
-            break;
-        }
-
-        printf("\n");
-    } while (escolha != 0);
+        printf("Número de usuário inválido.\n");
+        return;
+    }
+}
+void verificadorUsuario(){
+    if (numUsuarios == 0)
+    {
+        printf("Não há usuários cadastrados.\n");
+        return;
+    }
 }
 
-int main()
-{
-    int escolha;
-    do
-    {
-        printf("______________________________________________________________\n");
-        printf("|#     #           #####                         #    #  #### | \n");
-        printf("|#     # #    # # #     #   ##   #####  # ###### ##   # #     | \n");
-        printf("|#     # ##   # # #        #  #  #    # # #      # #  #  #### | \n");
-        printf("|#     # # #  # #  #####  #    # #    # # #####  #  # #      #| \n");
-        printf("|#     # #  # # #       # ###### #####  # #      #   ## #    #| \n");
-        printf("|#     # #   ## # #     # #    # #      # #      #   ## #    #| \n");
-        printf("| #####  #    # #  #####  #    # #      # ###### #    #  #### | \n");
-        printf("|_____________________________________________________________|\n");
-        printf("           __________________________________________\n");
-        printf("           |Sistema de Gerenciamento de Biblioteca   |\n");
-        printf("           |_________________________________________|\n");
-        printf("           |1. Menu de Livros                        |\n");
-        printf("           |2. Menu de Usuários                      |\n");
-        printf("           |0. Sair                                  |\n");
-        printf("           |_________________________________________|\n");
-        printf("Escolha uma opção: \n");
-        scanf("%d", &escolha);
 
-        getchar(); // Limpa o buffer do teclado
-
-        switch (escolha)
-        {
-        case 1:
-            menuLivros();
-            break;
-        case 2:
-            menuUsuario();
-            break;
-        case 0:
-            printf("Saindo do sistema...\n");
-            break;
-        default:
-            printf("Opção inválida. Tente novamente.\n");
-            break;
-        }
-
-        printf("\n");
-    } while (escolha != 0);
-
-    return 0;
-}
