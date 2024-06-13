@@ -35,6 +35,7 @@ int numUsuarios = 0;
 
 // Funções
 int compararTitulo(const void *a, const void *b);
+void verificadorLivro();
 void usuarioValido(int indiceUsuario);
 void verificadorUsuario();
 void adicionarLivros();
@@ -259,11 +260,7 @@ void adicionarLivros(){
 
 void exibirLivros()
 {
-    if (numLivros == 0)
-    {
-        printf("A biblioteca está vazia.\n");
-        return;
-    }
+    void verificadorLivro();
 
     qsort(biblioteca, numLivros, sizeof(Livro), compararTitulo);
 
@@ -281,11 +278,7 @@ void exibirLivros()
 
 void atualizarLivro()
 {
-    if (numLivros == 0)
-    {
-        printf("A biblioteca está vazia.\n");
-        return;
-    }
+    void verificadorLivro();
 
     int indiceLivro;
     printf("Digite o número do livro que deseja atualizar: ");
@@ -320,11 +313,7 @@ void atualizarLivro()
 
 void deletarLivro()
 {
-    if (numLivros == 0)
-    {
-        printf("A biblioteca está vazia.\n");
-        return;
-    }
+    void verificadorLivro();
 
     int indiceLivro;
     printf("Digite o número do livro que deseja deletar: ");
@@ -348,11 +337,7 @@ void deletarLivro()
 
 void emprestarLivro()
 {
-    if (numLivros == 0)
-    {
-        printf("A biblioteca está vazia.\n");
-        return;
-    }
+    void verificadorLivro();
 
     void verificadorUsuario();
 
@@ -396,11 +381,7 @@ void emprestarLivro()
 
 void devolverLivro()
 {
-    if (numLivros == 0)
-    {
-        printf("A biblioteca está vazia.\n");
-        return;
-    }
+    void verificadorLivro();
 
     void verificadorUsuario();
 
@@ -585,4 +566,11 @@ void verificadorUsuario(){
     }
 }
 
+void verificadorLivro(){
+    if (numLivros == 0)
+    {
+        printf("Não há livros cadastrados.\n");
+        return;
+    }
+}
 
